@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h3>Tasks</h3>
+<a href="{% url "task_create" %}">Create New Task</a>
+
+<div class="tasks">
+    {% for task in tasks %}
+    <p>Title: {{ task.title }}</p>
+    <p>Description: {{ task.description }}</p>
+    <p>Priority: {{ task.priority }}</p>
+    <p>Status: {{ task.status }}</p>
+    <p>Due Date: {{ task.due_date }}</p>
+    <a href="{% url "task_update" task.id %}">Edit</a>
+    <a href="{% url "task_delete" task.id %}">Delete</a>
+    <a href="{% url "task_detail" task.id %}">Open</a>
+</div>
+
+{% endfor %}
+{% endblock  %}
