@@ -12,6 +12,7 @@ class TaskListView(LoginRequiredMixin,ListView):
     model = Tasks
     template_name = 'tasks/task_list.html'
     context_object_name = 'tasks'
+    paginate_by = 2
 
     def get_queryset(self):
         queryset = Tasks.objects.filter(
