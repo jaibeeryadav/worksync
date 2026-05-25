@@ -22,6 +22,8 @@ class TaskListView(LoginRequiredMixin,ListView):
         search_query = self.request.GET.get('q')
         priority = self.request.GET.get('priority')
         status = self.request.GET.get('status')
+        ordering = self.request.GET.get('ordering')
+
 
         if search_query:
             queryset=queryset.filter(
@@ -32,7 +34,12 @@ class TaskListView(LoginRequiredMixin,ListView):
             queryset = queryset.filter(priority=priority)
         if status:
             queryset = queryset.filter(status = status)
-        
+        allowed_ordering = [
+            "created_at",
+            "-created_at"
+        ]
+        if ordering in allowed_ordering:
+            queryset = queryset.order_by(ordering)
         return queryset
 
 
