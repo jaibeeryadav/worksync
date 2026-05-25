@@ -19,12 +19,19 @@ class TaskListView(LoginRequiredMixin,ListView):
         )
         # search feature
         search_query = self.request.GET.get('q')
+        priority = self.request.GET.get('priority')
+        status = self.request.GET.get('status')
 
         if search_query:
             queryset=queryset.filter(
                 Q(title__icontains=search_query)|
                 Q(description__icontains=search_query)
             )
+        if priority:
+            queryset = queryset.filter(priority=priority)
+        if status:
+            queryset = queryset.filter(status = status)
+        
         return queryset
 
 
