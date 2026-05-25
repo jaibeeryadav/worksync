@@ -4,6 +4,7 @@ from .forms import TaskForm
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
+from django.db.models import Q
 
 # Create your views here.
 
@@ -13,9 +14,19 @@ class TaskListView(LoginRequiredMixin,ListView):
     context_object_name = 'tasks'
 
     def get_queryset(self):
-        return Tasks.objects.filter(
+        queryset = Tasks.objects.filter(
             user = self.request.user
         )
+        # search feature
+        search_query = self.request.GET.get('q')
+
+        if search_query:
+            queryset=queryset.filter(
+                Q(title__icontains=search_query)|
+                Q(description__icontains=search_query)
+            )
+        return queryset
+
 
 class TaskCreationView(LoginRequiredMixin, CreateView):
     model = Tasks
@@ -57,3 +68,5 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
         return Tasks.objects.filter(
             user = self.request.user
         )
+
+

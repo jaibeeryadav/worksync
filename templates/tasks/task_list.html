@@ -4,6 +4,11 @@
 <h3>Tasks</h3>
 <a href="{% url "task_create" %}">Create New Task</a>
 
+<form method="get">
+    <input type="text" name="q" placeholder="search" value="{{ request.GET.q }}">
+    <button type="submit">search</button>
+</form>
+
 <div class="tasks">
     {% for task in tasks %}
     <p>Title: {{ task.title }}</p>
