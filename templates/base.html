@@ -1,9 +1,12 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>worksync</title>
+    <!--here you can add base.css file where your whole body and whole project css written-->  
+    <link rel="stylesheet" href="{% static "css/base.css" %}">
     {% block css %}
     
     {% endblock  %}
