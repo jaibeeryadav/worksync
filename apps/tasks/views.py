@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from .models import Tasks
-from .forms import TaskForm
+from .models import Tasks, Categories
+from .forms import TaskForm, CategoriesForm
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
@@ -51,6 +51,12 @@ class TaskCreationView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
+        new_category = form.cleaned_data.get(
+            "new_category"
+        )
+        if new_category:
+            category, created = (Categories.objects.get_or_create(name = new_category, user = self.request.user,))
+            form.instance.category  = category
         return super().form_valid(form)
     
 class TaskUpdateView(LoginRequiredMixin, UpdateView):
@@ -84,4 +90,22 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
             user = self.request.user
         )
 
+class CategoriesListView(LoginRequiredMixin, ListView):
+    model = Categories
+    template_name = 'tasks/category_list.html'
+    context_object_name = 'categories'
+    def get_queryset(self):
+        return Categories.objects.filter(
+            user = self.request.user
+        )
 
+class CategoriesCreateView(LoginRequiredMixin, CreateView):
+    model = Categories
+    form_class = CategoriesForm
+    template_name = 'tasks/category_create.html'
+    success_url = reverse_lazy('category_list')
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+    

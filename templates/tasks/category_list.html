@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<a href="{% url "category_create" %}">Create categories</a>
+
+{% for category in categories %}
+<p>{{ category.name }}</p>
+
+{% empty %}
+<p>No categories</p>
+{% endfor %}
+
+
+{% endblock  %}

@@ -4,7 +4,20 @@
 <h2>Create Task</h2>
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ form.title.label_tag }}
+    {{ form.title }}
+    {{ form.description.label_tag }}
+    {{ form.description }}
+    {{ form.priority.label_tag }}
+    {{ form.priority }}
+    {{ form.status.label_tag }}
+    {{ form.status }}
+    {{ form.due_date.label_tag }}
+    {{ form.due_date }}
+    {{ form.category.label_tag }}
+    {{ form.category }}
+    <p> or create a new category </p>
+    {{ form.new_category }}
     <button type="submit">Create</button>
 </form>
 {% endblock  %}

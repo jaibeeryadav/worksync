@@ -37,6 +37,7 @@
     <p>Priority: {{ task.priority }}</p>
     <p>Status: {{ task.status }}</p>
     <p>Due Date: {{ task.due_date }}</p>
+    <p>category: {{task.category }}</p>
     <a href="{% url "task_update" task.id %}">Edit</a>
     <a href="{% url "task_delete" task.id %}">Delete</a>
     <a href="{% url "task_detail" task.id %}">Open</a>
@@ -44,6 +45,9 @@
 
 
 {% endfor %}
+
+<a href="{% url "category_list" %}">View All category</a>
+</div>
 <div>
     {% if page_obj.has_previous %}
         <a href="?page=1">
