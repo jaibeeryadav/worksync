@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>wlcome {{ user.username }}</h2>
+
+<hr>
+<h2>Dashboard Analytics</h2>
+
+<p>total tasks: {{ total_tasks }}</p>
+
+<p>completed tasks: {{ completed_tasks }}</p>
+
+<p>Pending tasks: {{ pending_tasks }}</p>
+
+<p>overdue tasks: {{ overdue_tasks }}</p>
+<hr>
+
+<h2>Recent Tasks</h2>
+{% for task in recent_tasks %}
+<div>
+    <h3>{{ task.title }}</h3>
+    <p>{{ task.status }}</p>
+    
+</div>
+{% empty %}
+<p>no recent tasks</p>
+{% endfor %}
+<hr>
+
+<a href="{% url "task_create" %}">Create Tasks</a>
+<a href="{% url "task_list" %}">View All Tasks</a>
+{% endblock  %}

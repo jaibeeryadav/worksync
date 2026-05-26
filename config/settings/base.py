@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'apps.accounts',
     'apps.tasks',
+    'apps.dashboard',
 ]
 
 MIDDLEWARE = [
@@ -124,7 +125,7 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-LOGIN_REDIRECT_URL= "/"
+LOGIN_REDIRECT_URL= "dashboard"
 LOGOUT_REDIRECT_URL = "login"
 
 EMAIL_USE_LOCALTIME = False
