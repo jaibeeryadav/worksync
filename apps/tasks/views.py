@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from .models import Tasks, Categories,Tag
-from .forms import TaskForm, CategoriesForm, TagForm
+from .models import Tasks, Categories,Tag, Comments
+from .forms import TaskForm, CategoriesForm, TagForm, CommentsForm
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
@@ -98,6 +98,25 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
         return Tasks.objects.filter(
             user = self.request.user
         )
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["comment_form"] = CommentsForm()
+        return context
+    def post(self,request, *args, **kwargs):
+        self.object = self.get_object()
+        form = CommentsForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.task = self.object
+            comment.user = request.user
+            comment.save()
+            return redirect('task_detail', pk = self.object.pk)
+        context = self.get_context_data()
+
+        context["comment_form"] = form
+
+        return self.render_to_response(context)
+        
 
 class CategoriesListView(LoginRequiredMixin, ListView):
     model = Categories

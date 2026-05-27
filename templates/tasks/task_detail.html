@@ -6,6 +6,76 @@
 <p>Priority: {{ task.priority }}</p>
 <p>Status: {{ task.status }}</p>
 <p>Due Date: {{ task.due_date }}</p>
+<h2>
+    Tags
+</h2>
+
+{% for tag in task.tags.all %}
+
+    <span>
+        {{ tag.name }}
+    </span>
+
+{% empty %}
+
+    <p>
+        No tags.
+    </p>
+
+{% endfor %}
+
+<hr>
+
+<h2>
+    Comments
+</h2>
+
+{% for comment in task.comments.all %}
+
+    <div>
+
+        <strong>
+            {{ comment.user.username }}
+        </strong>
+
+        <p>
+            {{ comment.content }}
+        </p>
+
+        <small>
+            {{ comment.created_at }}
+        </small>
+
+    </div>
+
+    <hr>
+
+{% empty %}
+
+    <p>
+        No comments yet.
+    </p>
+
+{% endfor %}
+
+<hr>
+
+<h2>
+    Add Comment
+</h2>
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    {{ comment_form.as_p }}
+
+    <button type="submit">
+        Add Comment
+    </button>
+
+</form>
+
 <a href="{% url "task_update" task.id %}">Edit</a>
 <a href="{% url "task_delete" task.id %}">Delete</a>
 

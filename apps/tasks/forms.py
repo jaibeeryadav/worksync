@@ -1,5 +1,5 @@
 from django import forms
-from .models import Tasks,Categories, Tag
+from .models import Tasks,Categories, Tag, Comments
 
 class TaskForm(forms.ModelForm):
     due_date = forms.DateField(
@@ -39,3 +39,7 @@ class TagForm(forms.ModelForm):
     class Meta:
         model = Tag
         fields = ['name']
+class CommentsForm(forms.ModelForm):
+    class Meta:
+        model = Comments
+        fields = ['content']
