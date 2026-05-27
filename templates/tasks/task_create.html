@@ -16,8 +16,13 @@
     {{ form.due_date }}
     {{ form.category.label_tag }}
     {{ form.category }}
+    {{ form.tags.label_tag }}
+    {{ form.tags }}
+
     <p> or create a new category </p>
     {{ form.new_category }}
+    <p>create a new Tag</p>
+    {{ form.new_tags }}
     <button type="submit">Create</button>
 </form>
 {% endblock  %}

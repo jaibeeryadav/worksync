@@ -1,6 +1,6 @@
-from django.shortcuts import render
-from .models import Tasks, Categories
-from .forms import TaskForm, CategoriesForm
+from django.shortcuts import render, redirect
+from .models import Tasks, Categories,Tag
+from .forms import TaskForm, CategoriesForm, TagForm
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
@@ -50,14 +50,23 @@ class TaskCreationView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('task_list')
 
     def form_valid(self, form):
-        form.instance.user = self.request.user
+        task  = form.save(commit=False)
+        task.user = self.request.user
+        
         new_category = form.cleaned_data.get(
             "new_category"
         )
         if new_category:
             category, created = (Categories.objects.get_or_create(name = new_category, user = self.request.user,))
-            form.instance.category  = category
-        return super().form_valid(form)
+            task.category  = category
+        task.save()
+        form.save_m2m()
+
+        new_tags = form.cleaned_data.get('new_tags')
+        if new_tags:
+            tags, created = (Tag.objects.get_or_create(name = new_tags, user = self.request.user,))
+            task.tags.add(tags)
+        return redirect('task_list')
     
 class TaskUpdateView(LoginRequiredMixin, UpdateView):
     model = Tasks
@@ -104,6 +113,24 @@ class CategoriesCreateView(LoginRequiredMixin, CreateView):
     form_class = CategoriesForm
     template_name = 'tasks/category_create.html'
     success_url = reverse_lazy('category_list')
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+    
+class TagListView(LoginRequiredMixin, ListView):
+    model = Tag
+    template_name = 'tasks/tag_list.html'
+    context_object_name = 'tags'
+
+    def get_queryset(self):
+        return Tag.objects.filter(user=self.request.user)
+
+class TagCreateView(LoginRequiredMixin, CreateView):
+    model = Tag
+    form_class = TagForm
+    template_name = 'tasks/tag_create.html'
+    success_url = reverse_lazy('tag_list')
 
     def form_valid(self, form):
         form.instance.user = self.request.user

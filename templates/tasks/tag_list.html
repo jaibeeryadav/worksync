@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<a href="{% url "tag_create" %}">Create New Tags</a>
+<h2>Tags</h2>
+{% for tag in tags %}
+    {% if tag %}
+        <p>{{ tag.name }}</p>
+    {% empty %}
+        <p>No Tags</p>
+    {% endif %}
+{% endfor %}
+{% endblock  %}
