@@ -1,11 +1,24 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+{{ form.files }}
 <p>Title: {{ task.title }}</p>
 <p>Description: {{ task.description }}</p>
 <p>Priority: {{ task.priority }}</p>
 <p>Status: {{ task.status }}</p>
 <p>Due Date: {{ task.due_date }}</p>
+<p>Attachments</p>
+{% for attachment in task.attachments.all %}
+    {{ attachment.files }}
+    {% if attachment.files %}
+        <a href="{{ attachment.files.url }}">{{ attachment.files.name }}</a>
+    {% endif %}
+
+{% empty %}
+<p>no attachment</p>
+{% endfor %}
+
 <h2>
     Tags
 </h2>
@@ -25,7 +38,7 @@
 {% endfor %}
 
 <hr>
-
+{{ attachment_form.files }}
 <h2>
     Comments
 </h2>
@@ -59,7 +72,14 @@
 {% endfor %}
 
 <hr>
+<h2>upload files/screenshots</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ attachments_form.as_p }}
+    <button type="submit">Submit</button>
+</form>
 
+<hr>
 <h2>
     Add Comment
 </h2>

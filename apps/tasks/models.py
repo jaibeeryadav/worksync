@@ -62,3 +62,13 @@ class Comments(models.Model):
     def __str__(self):
         return f"{self.user}-{self.task}"
     
+class Attachments(models.Model):
+    task = models.ForeignKey(Tasks, on_delete=models.CASCADE, related_name='attachments')
+    uploaded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    files = models.FileField(upload_to='tasks/attachments', null=True, blank=True)
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.files.name if self.files else 'no files'
+
+    

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from .models import Tasks, Categories,Tag, Comments
-from .forms import TaskForm, CategoriesForm, TagForm, CommentsForm
+from .models import Tasks, Categories,Tag, Comments, Attachments
+from .forms import TaskForm, CategoriesForm, TagForm, CommentsForm, AttachmentsForm
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
@@ -101,10 +101,19 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["comment_form"] = CommentsForm()
+        context['attachments_form'] = AttachmentsForm()
         return context
+    
     def post(self,request, *args, **kwargs):
         self.object = self.get_object()
         form = CommentsForm(request.POST)
+        attachment_form = AttachmentsForm(request.POST, request.FILES,)
+        if attachment_form.is_valid():
+            attachments = attachment_form.save(commit=False)
+            attachments.task = self.object
+            attachments.uploaded_by = self.request.user
+            attachments.save()
+            return redirect('task_detail', pk=self.object.pk)
         if form.is_valid():
             comment = form.save(commit=False)
             comment.task = self.object
