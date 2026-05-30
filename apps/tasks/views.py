@@ -41,6 +41,21 @@ class TaskListView(LoginRequiredMixin,ListView):
         if ordering in allowed_ordering:
             queryset = queryset.order_by(ordering)
         return queryset
+    def post(self, request, *args, **kwargs):
+        selected_tasks = request.POST.getlist('selected_tasks')
+        action= request.POST.get('action')
+        tasks = Tasks.objects.filter(
+            id__in = selected_tasks,
+            user = request.user
+        )
+
+        if action == 'delete':
+            tasks.delete()
+
+        elif action == 'completed':
+            tasks.update(status='completed')
+
+        return redirect('task_list')
 
 
 class TaskCreationView(LoginRequiredMixin, CreateView):
@@ -125,7 +140,6 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
         context["comment_form"] = form
 
         return self.render_to_response(context)
-        
 
 class CategoriesListView(LoginRequiredMixin, ListView):
     model = Categories

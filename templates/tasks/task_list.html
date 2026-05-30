@@ -6,7 +6,18 @@
 {% block content %}
 <h3>Tasks</h3>
 <a href="{% url "task_create" %}">Create New Task</a>
-
+<form method="post">
+    {% csrf_token %}
+    {% for task in tasks %}
+    <input type="checkbox" name='selected_tasks' value="{{ task.id }}">
+    {{ task.title }}-
+    {{ task.status }}
+    
+    {% endfor %}
+    <button type="submit" value="delete" name="action">Delete</button>
+    <button type="submit" value="completed" name="action">Mark Completed</button>
+    <hr>
+</form>
 <form method="get">
     <input type="text" name="q" placeholder="search" value="{{ request.GET.q }}">
     <select name="priority" >
